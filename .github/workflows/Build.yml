@@ -1,11 +1,11 @@
-name: Develop
+name: ActionBuild
 
 on:
   push:
     branches: [ master, develop ]
 
 jobs:
-    Develop:
+    ActionBuild:
         runs-on: macos-latest
         strategy:
             matrix:
