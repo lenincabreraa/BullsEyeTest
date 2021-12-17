@@ -1,35 +1,16 @@
-name: Build Action
+name: Develop
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 jobs:
-  Build:
-    runs-on: macos-10.15
-    timeout-minutes: 15
-    steps:
-      - name: "Checkout Project"
-        uses: actions/checkout@v2
-
-      - name: "Select Xcode 12"
-        uses: st3fan/xcode-select@main
-        with:
-            version: "12"
-
-      - name: Run tests
-        uses: sersoft-gmbh/xcodebuild-action@v1
-        with:
-            project: BullsEye.xcodeproj
-            scheme: BullsEye
-            derived-data-path: ./output
-            destination: "OS=14.4,name=iPhone 12 Pro"
-            action: test
-            enable-code-coverage: true
-
-      - name: Test Coverage
-        uses: maxep/xcodebuild-lcov-action@0.1.0
-        with:
-            derived-data-path: ./output
-            target: BullsEye.app
-            output-file: ./output/lcov.info
+    Develop:
+        runs-on: macos-latest
+        strategy:
+            matrix:
+                run-config:
+                    - { scheme: 'BullsEye',   configuration: 'Debug', project: 'BullsEye.xcodeproj', build: 1, analyze: 0, test: 0, info: 1, destination: 'generic/platform=iOS Simulator,name=iPhone 12' }
+        steps:
+            - uses: actions/checkout@v1
+            - uses: macmade/action-xcodebuild@v1.0.0
