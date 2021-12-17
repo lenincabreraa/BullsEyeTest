@@ -5,12 +5,22 @@ on:
     branches: [ master, develop ]
 
 jobs:
-    ActionBuild:
-        runs-on: macos-latest
-        strategy:
-            matrix:
-                run-config:
-                    - { scheme: 'BullsEye',   configuration: 'Debug', project: 'BullsEye.xcodeproj', build: 1, analyze: 0, test: 0, info: 1, destination: 'generic/platform=iOS Simulator,name=iPhone 12' }
-        steps:
-            - uses: actions/checkout@v1
-            - uses: macmade/action-xcodebuild@v1.0.0
+  Build:
+    runs-on: macos-10.15
+    timeout-minutes: 15
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+
+      - name: Select Xcode 12
+        uses: st3fan/xcode-select@main
+        with:
+            version: "12"
+
+      - name: Run build
+        uses: sersoft-gmbh/xcodebuild-action@v1
+        with:
+          project: BullsEye.xcodeproj
+          scheme: BullsEye
+          destination: generic/platform=iOS Simulator
+          action: build
